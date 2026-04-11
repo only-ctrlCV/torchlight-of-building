@@ -19,6 +19,8 @@ import {
   toSnakeCase,
 } from "./tlidb-tools";
 
+const CURRENT_SEASON = "SS12Season";
+
 // ============================================================================
 // Fetching
 // ============================================================================
@@ -273,36 +275,24 @@ const extractLegendary = (
   filename: string,
   choiceCards: Map<string, AffixChoiceCard>,
 ): TlidbLegendary | undefined => {
-  // Find both SS11Season and SS10Season cards
-  let s11Card: CheerioCard | undefined;
-  let s10Card: CheerioCard | undefined;
+  // Find the current season card
+  let seasonCard: CheerioCard | undefined;
 
   $(".card.ui_item").each((_, card) => {
     const $card = $(card);
     const itemVer = $card.find(".item_ver").text().trim();
-    if (itemVer === "SS11Season" && !$card.hasClass("previousItem")) {
-      s11Card = $card;
-    } else if (itemVer === "SS10Season") {
-      s10Card = $card;
+    if (itemVer === CURRENT_SEASON && !$card.hasClass("previousItem")) {
+      seasonCard = $card;
     }
   });
 
-  if (s11Card === undefined) {
-    console.log(`  Skipping ${filename}: No SS11Season card found`);
+  if (seasonCard === undefined) {
+    console.log(`  Skipping ${filename}: No ${CURRENT_SEASON} card found`);
     return undefined;
   }
 
-  // Try SS11 card first, fall back to SS10 if no affixes
-  let mainCard = s11Card;
-  let normalAffixes = extractNormalAffixes(mainCard, $, choiceCards);
-
-  if (normalAffixes.length === 0 && s10Card !== undefined) {
-    console.log(
-      `  ${filename}: SS11 card has no affixes, falling back to SS10`,
-    );
-    mainCard = s10Card;
-    normalAffixes = extractNormalAffixes(mainCard, $, choiceCards);
-  }
+  const mainCard = seasonCard;
+  const normalAffixes = extractNormalAffixes(mainCard, $, choiceCards);
 
   // Extract name
   const name = mainCard.find("h5.card-title.item_rarity").text().trim();
