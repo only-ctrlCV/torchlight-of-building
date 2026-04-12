@@ -129,7 +129,7 @@ export const Destinies: readonly Destiny[] = ${JSON.stringify(items)};
 };
 
 const main = async (): Promise<void> => {
-  const useCache = !process.argv.includes("--fetch");
+  const useCache = !process.argv.includes("--refetch");
 
   console.log("Loading destiny HTML...");
   const html = await fetchDestinyHtml(useCache);

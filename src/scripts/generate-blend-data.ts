@@ -153,7 +153,7 @@ export const Blends: readonly Blend[] = ${JSON.stringify(items)};
 };
 
 const main = async (): Promise<void> => {
-  const useCache = !process.argv.includes("--fetch");
+  const useCache = !process.argv.includes("--refetch");
 
   console.log("Loading blending rituals HTML...");
   const html = await fetchBlendHtml(useCache);

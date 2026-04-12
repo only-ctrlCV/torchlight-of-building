@@ -24,7 +24,7 @@ export const AboutModal = ({
         </p>
         <p className="text-zinc-300">
           <a
-            href="https://discord.gg/WuyJ5fJMSj"
+            href="https://discord.gg/u92uhuUu"
             target="_blank"
             rel="noopener noreferrer"
             className="text-amber-400 hover:text-amber-300 transition-colors"
