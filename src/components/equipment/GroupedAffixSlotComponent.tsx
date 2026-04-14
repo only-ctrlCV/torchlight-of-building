@@ -109,6 +109,7 @@ export const GroupedAffixSlotComponent = ({
           percentage={selection.percentage}
           hideQualitySlider={false}
           showTierInfo={!hideTierInfo}
+          tierCount={selectedGroup?.affixes.length}
           onSliderChange={onSliderChange}
           onClear={onClear}
         />

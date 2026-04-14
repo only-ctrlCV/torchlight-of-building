@@ -6,6 +6,7 @@ interface AffixPreviewSectionProps {
   percentage: number;
   hideQualitySlider: boolean;
   showTierInfo: boolean;
+  tierCount?: number;
   onSliderChange: (slotIndex: number, value: string) => void;
   onClear: (slotIndex: number) => void;
 }
@@ -16,6 +17,7 @@ export const AffixPreviewSection = ({
   percentage,
   hideQualitySlider,
   showTierInfo,
+  tierCount,
   onSliderChange,
   onClear,
 }: AffixPreviewSectionProps): React.ReactElement => {
@@ -29,15 +31,29 @@ export const AffixPreviewSection = ({
           >
             Quality
           </label>
-          <input
-            id={`quality-slider-${slotIndex}`}
-            type="range"
-            min="0"
-            max="100"
-            value={percentage}
-            onChange={(e) => onSliderChange(slotIndex, e.target.value)}
-            className="flex-1"
-          />
+          <div className="relative flex-1">
+            <input
+              id={`quality-slider-${slotIndex}`}
+              type="range"
+              min="0"
+              max="100"
+              value={percentage}
+              onChange={(e) => onSliderChange(slotIndex, e.target.value)}
+              className="relative z-10 w-full"
+            />
+            {tierCount !== undefined &&
+              tierCount > 1 &&
+              Array.from({ length: tierCount - 1 }, (_, i) => {
+                const position = ((i + 1) / tierCount) * 100;
+                return (
+                  <div
+                    key={i}
+                    className="pointer-events-none absolute top-1/2 z-0 h-3 w-px -translate-y-1/2 bg-zinc-500"
+                    style={{ left: `${position}%` }}
+                  />
+                );
+              })}
+          </div>
           <span className="shrink-0 text-xs font-medium text-zinc-50">
             {percentage}%{showTierInfo && ` (T${selectedAffix.tier})`}
           </span>
