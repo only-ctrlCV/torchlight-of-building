@@ -1079,7 +1079,7 @@ const resolveBuffSkillMods = (
   ];
   const resolvedMods: Mod[] = [];
 
-  const numAuraSkills = passiveSkillSlots.filter((slot) => {
+  const numAuraSkills = allSkillSlots.filter((slot) => {
     if (!slot.enabled || slot.skillName === undefined) {
       return false;
     }
@@ -1366,7 +1366,14 @@ const resolvePerSkillMods = (
   if (skillSlot.skillName === undefined) {
     return undefined;
   }
-  const skill = findActiveSkill(skillSlot.skillName as ActiveSkillName);
+  const skill = findSkill(
+    skillSlot.skillName as ActiveSkillName | PassiveSkillName,
+  );
+
+  // Skip passive skills (they are handled as buff skills instead)
+  if (skill === undefined || skill.type === "Passive") {
+    return undefined;
+  }
 
   // Skip non-implemented skills (those without levelValues)
   if (!("levelValues" in skill) || skill.levelValues === undefined) {
@@ -1404,7 +1411,10 @@ const resolvePerSkillMods = (
     resourcePool,
   );
 
-  return { mods: [...selectedSkillMods, ...supportMods], skill };
+  return {
+    mods: [...selectedSkillMods, ...supportMods],
+    skill: skill as BaseActiveSkill,
+  };
 };
 
 const calculateNumShadowHits = (mods: Mod[], config: Configuration): number => {
@@ -2497,10 +2507,14 @@ const calculateSealedResources = (
   let totalSealedManaPct = 0;
   let totalSealedLifePct = 0;
 
-  const passiveSlots = loadout.skillPage.passiveSkills;
-  for (const slotKey of [1, 2, 3, 4] as const) {
-    const slot = passiveSlots[slotKey];
-    if (slot === undefined || slot.skillName === undefined || !slot.enabled) {
+  // Collect all skill slots that contain passive skills (from both passive and active slot sections)
+  const passiveSlotEntries: SkillSlot[] = [
+    ...Object.values(loadout.skillPage.passiveSkills),
+    ...Object.values(loadout.skillPage.activeSkills),
+  ].filter((slot): slot is SkillSlot => slot !== undefined);
+
+  for (const slot of passiveSlotEntries) {
+    if (slot.skillName === undefined || !slot.enabled) {
       continue;
     }
     const passiveSkill = PassiveSkills.find((s) => s.name === slot.skillName) as

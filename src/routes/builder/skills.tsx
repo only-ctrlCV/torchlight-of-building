@@ -57,6 +57,9 @@ function SkillsPage(): React.ReactNode {
     [loadout.skillPage.passiveSkills],
   );
 
+  const allSelectedNames = [...selectedActiveNames, ...selectedPassiveNames];
+  const allSkills = [...ActiveSkills, ...PassiveSkills];
+
   return (
     <div className="space-y-8">
       <div className="flex justify-end">
@@ -87,8 +90,8 @@ function SkillsPage(): React.ReactNode {
               key={`active-${slotKey}`}
               slotLabel={`Active ${slotKey}`}
               skill={loadout.skillPage.activeSkills[slotKey]}
-              availableSkills={ActiveSkills}
-              excludedSkillNames={selectedActiveNames}
+              availableSkills={allSkills}
+              excludedSkillNames={allSelectedNames}
               onSkillChange={(skillName) => setActiveSkill(slotKey, skillName)}
               onToggle={() => toggleSkillEnabled("active", slotKey)}
               onLevelChange={(level) => setSkillLevel("active", slotKey, level)}
@@ -110,7 +113,7 @@ function SkillsPage(): React.ReactNode {
               slotLabel={`Passive ${slotKey}`}
               skill={loadout.skillPage.passiveSkills[slotKey]}
               availableSkills={PassiveSkills}
-              excludedSkillNames={selectedPassiveNames}
+              excludedSkillNames={allSelectedNames}
               onSkillChange={(skillName) => setPassiveSkill(slotKey, skillName)}
               onToggle={() => toggleSkillEnabled("passive", slotKey)}
               onLevelChange={(level) =>

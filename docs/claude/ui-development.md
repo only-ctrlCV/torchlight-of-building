@@ -180,3 +180,7 @@ grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3
 | Add UI section | Create `src/routes/builder/{section}.tsx`, update `PageTabs.tsx` |
 | Add feature UI state | Create `src/stores/{feature}UIStore.ts` |
 | Add reusable component | `src/components/ui/` |
+
+## Misc
+
+- Do not use useMemo unless absolutely necessary
