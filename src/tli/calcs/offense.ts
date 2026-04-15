@@ -745,13 +745,7 @@ const calcAtkHit = (
   const skillFlatDR = multDRs(flatDmg, addedDmgEffPct / 100);
   const skillBaseDmg = addDRs(skillWeaponDR, skillFlatDR);
 
-  const addSpellTag =
-    skill.tags.includes("Attack") &&
-    findMod(mods, "SpellDmgBonusAppliesToAtkDmg") !== undefined;
-
-  const baseDmgModTypes: DmgModType[] = addSpellTag
-    ? [...dmgModTypesForSkill(skill), "spell"]
-    : dmgModTypesForSkill(skill);
+  const baseDmgModTypes: DmgModType[] = dmgModTypesForSkill(skill);
 
   const dmgPools = convertDmg(skillBaseDmg, mods);
   const finalDmgRanges = applyDmgBonusesAndPen({

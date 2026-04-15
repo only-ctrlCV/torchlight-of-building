@@ -460,6 +460,17 @@ export const calculateChunkDmg = <T extends DmgRange | number>(
 
   const applicableMods = filterDmgPctMods(allDmgPctMods, dmgModTypes);
 
+  // SpellDmgBonusAppliesToAtkDmg: add non-debuff spell damage mods to attacks
+  if (
+    !dmgModTypes.includes("spell") &&
+    modExists(allMods, "SpellDmgBonusAppliesToAtkDmg")
+  ) {
+    const spellMods = allDmgPctMods.filter(
+      (m) => m.dmgModType === "spell" && m.isEnemyDebuff !== true,
+    );
+    applicableMods.push(...spellMods);
+  }
+
   const inc = calculateDmgInc(applicableMods);
   const addn = calculateDmgAddn(applicableMods);
   const mult = (1 + inc) * addn;
