@@ -8,7 +8,7 @@ on:
     branches: [main]
 
 env:
-  # 服务器连接配置 (优先使用默认支持的公开环境变量，避免在各个 Step 中重复书写 env. 引用)
+  # 服务器连接配置 (优先使用默认支持的公开环境变量，避免在各个 Step 中重复书写  引用)
   HOST: ${{ secrets.SERVER_HOST || secrets.HOST }}
   PORT: ${{ secrets.SERVER_PORT || secrets.PORT || '22' }}
   USERNAME: ${{ secrets.SERVER_USERNAME || secrets.USERNAME }}
@@ -78,6 +78,10 @@ jobs:
       - name: Prepare temp directory on server
         uses: appleboy/ssh-action@master
         with:
+          host: ${HOST }
+          port: ${ PORT }
+          username: ${ USERNAME }
+          key: ${ KEY }
           envs: APP_TEMP_DEPLOY_PATH
           script: |
             mkdir -p $APP_TEMP_DEPLOY_PATH
@@ -86,6 +90,10 @@ jobs:
       - name: Upload app static files via SCP
         uses: appleboy/scp-action@master
         with:
+          host: ${HOST }
+          port: ${ PORT }}
+          username: ${{USERNAME }
+          key: ${ KEY }
           source: "dist/*"
           target: "/tmp/tob_app_site"
           strip_components: 1
@@ -93,6 +101,10 @@ jobs:
       - name: Deploy to Nginx path
         uses: appleboy/ssh-action@master
         with:
+          host: ${HOST }
+          port: ${PORT }
+          username: ${ USERNAME }
+          key: ${ KEY }
           envs: APP_DEPLOY_PATH,APP_TEMP_DEPLOY_PATH
           script: |
             sudo mkdir -p $APP_DEPLOY_PATH
